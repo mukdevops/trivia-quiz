@@ -1,0 +1,19 @@
+# src/main/resources/application-test.yml
+
+spring:
+  application:
+    name: quiz
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # 'update' automatically creates/updates tables based on entities
+    show-sql: true      # Logs SQL queries in the console
+    properties:
+      hibernate:
+        default_schema: ${DB_SCHEMA_NAME}
+        dialect: org.hibernate.dialect.PostgreSQLDialect
