@@ -103,17 +103,19 @@ public class TriviaService {
   }
 
   private String checkAnswer(final String answer, final TriviaEntity triviaEntity) {
-    if (triviaEntity.getAnswerAttempts() > 2) {
-      // check if max attempts reached
-      return STATUS_MAX_ATTEMPTS;
-    } else if (triviaEntity.getCorrectAnswer().equalsIgnoreCase(answer)) {
+
+    if (triviaEntity.getCorrectAnswer().equalsIgnoreCase(answer)) {
       // correct answer
       triviaRepository.deleteById(triviaEntity.getTriviaId());
       return STATUS_SUCCESS;
+    } else if (triviaEntity.getAnswerAttempts() != null && triviaEntity.getAnswerAttempts() > 2) {
+      // check if max attempts reached
+      return STATUS_MAX_ATTEMPTS;
     } else {
       // increase the attempts by 1
       triviaRepository.incrementAnswerAttempts(
-          triviaEntity.getTriviaId(), triviaEntity.getAnswerAttempts() + 1L);
+          triviaEntity.getTriviaId(),
+          Optional.ofNullable(triviaEntity.getAnswerAttempts()).orElse(0L) + 1L);
       return STATUS_FAILURE;
     }
   }
