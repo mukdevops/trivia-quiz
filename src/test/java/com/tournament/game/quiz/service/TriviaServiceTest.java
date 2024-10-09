@@ -3,6 +3,7 @@ package com.tournament.game.quiz.service;
 
 import com.tournament.game.quiz.entity.TriviaEntity;
 import com.tournament.game.quiz.entity.TriviaQuestionEntity;
+import com.tournament.game.quiz.exception.OpenAPIConnectionException;
 import com.tournament.game.quiz.model.TriviaApiResponse;
 import com.tournament.game.quiz.model.TriviaQuestion;
 import com.tournament.game.quiz.repository.TriviaQuestionRepository;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import static com.tournament.game.quiz.constants.TriviaConstants.STATUS_FAILURE;
 import static com.tournament.game.quiz.constants.TriviaConstants.STATUS_MAX_ATTEMPTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -92,6 +94,32 @@ class TriviaServiceTest {
         String response = triviaService.validateAnswer(123L,"London");
         // Verify that the trivia API was called
         assertEquals(STATUS_MAX_ATTEMPTS, response);
+    }
+
+    @Test
+    void startTrivia_ShouldThrowOpenAPIConnectionExceptionWhenResultsIsNull() {
+        // Mock the trivia API response
+        TriviaApiResponse mockResponse = getStubbedTriviaApiResponse();
+        mockResponse.setResults(null);
+        when(restTemplate.getForObject(anyString(), eq(TriviaApiResponse.class)))
+                .thenReturn(mockResponse);
+
+        assertThrows(OpenAPIConnectionException.class, () -> triviaService.returnQuestionWithPossibleAnswers());
+
+        // Verify that the trivia API was called
+        verify(restTemplate, times(1)).getForObject(anyString(), eq(TriviaApiResponse.class));
+    }
+
+    @Test
+    void startTrivia_ShouldThrowOpenAPIConnectionExceptionWhenAPIResponseIsNull() {
+
+        when(restTemplate.getForObject(anyString(), eq(TriviaApiResponse.class)))
+                .thenReturn(null);
+
+        assertThrows(OpenAPIConnectionException.class, () -> triviaService.returnQuestionWithPossibleAnswers());
+
+        // Verify that the trivia API was called
+        verify(restTemplate, times(1)).getForObject(anyString(), eq(TriviaApiResponse.class));
     }
 
     private static TriviaApiResponse getStubbedTriviaApiResponse() {

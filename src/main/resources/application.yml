@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: ${DB_PASSWORD}
+    password: Miller@40
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -15,5 +15,5 @@ spring:
     show-sql: true      # Logs SQL queries in the console
     properties:
       hibernate:
-        default_schema: ${DB_SCHEMA_NAME}
+        default_schema: santanderdb
         dialect: org.hibernate.dialect.PostgreSQLDialect
