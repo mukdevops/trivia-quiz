@@ -33,22 +33,6 @@ public class TriviaService {
     this.triviaRepository = triviaRepository;
   }
 
-  private static Trivia getTrivia(
-      final TriviaEntity triviaEntity, final TriviaApiResponse apiResponse) {
-    return Trivia.builder()
-        .triviaId(triviaEntity.getTriviaId())
-        .question(triviaEntity.getQuestion())
-        .possibleAnswers(getPossibleAnswers(apiResponse))
-        .build();
-  }
-
-  private static List<String> getPossibleAnswers(final TriviaApiResponse apiResponse) {
-    final List<String> possibleAnswers = new ArrayList<>();
-    possibleAnswers.add(apiResponse.getResults().get(0).getCorrectAnswer());
-    possibleAnswers.addAll(apiResponse.getResults().get(0).getIncorrectAnswers());
-    return possibleAnswers;
-  }
-
   @Transactional
   public TriviaResponse returnQuestionWithPossibleAnswers() {
     // Call Open Trivia API
@@ -102,5 +86,21 @@ public class TriviaService {
           Optional.ofNullable(triviaEntity.getAnswerAttempts()).orElse(0L) + 1L);
       return STATUS_FAILURE;
     }
+  }
+
+  private static Trivia getTrivia(
+          final TriviaEntity triviaEntity, final TriviaApiResponse apiResponse) {
+    return Trivia.builder()
+            .triviaId(triviaEntity.getTriviaId())
+            .question(triviaEntity.getQuestion())
+            .possibleAnswers(getPossibleAnswers(apiResponse))
+            .build();
+  }
+
+  private static List<String> getPossibleAnswers(final TriviaApiResponse apiResponse) {
+    final List<String> possibleAnswers = new ArrayList<>();
+    possibleAnswers.add(apiResponse.getResults().get(0).getCorrectAnswer());
+    possibleAnswers.addAll(apiResponse.getResults().get(0).getIncorrectAnswers());
+    return possibleAnswers;
   }
 }

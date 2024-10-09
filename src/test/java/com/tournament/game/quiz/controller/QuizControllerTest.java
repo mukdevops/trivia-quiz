@@ -51,10 +51,10 @@ class QuizControllerTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(quizController).build();
 
-         // Mock the service layer
-        Mockito.when(triviaService.validateAnswer(1L, "Correct")).thenReturn(TriviaConstants.STATUS_FAILURE);
+        // Mock the service layer
+        Mockito.when(triviaService.validateAnswer(1L, "Test")).thenReturn(TriviaConstants.STATUS_FAILURE);
         TriviaAnswer triviaAnswer = new TriviaAnswer();
-        triviaAnswer.setAnswer("Incorrect");
+        triviaAnswer.setAnswer("Test");
 
         mockMvc.perform(put("/trivia/reply/1")
                         .contentType(MediaType.APPLICATION_JSON)
